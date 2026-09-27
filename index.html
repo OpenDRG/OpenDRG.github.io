@@ -1,1 +1,132 @@
-<!doctype html><html><head><meta charset="utf-8"><title>DRG分组器--免费、开源的CHS-DRG分组器展示平台</title><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="favicon.ico"><script defer="defer" src="runtime.e472e44d.js"></script><script defer="defer" src="index.c0a875f9.js"></script></head><body></body></html>
+<!doctype html><html><head><meta charset="utf-8"><title>DRG分组器--免费、开源的CHS-DRG分组器展示平台</title><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="favicon.ico"><script defer="defer" src="runtime.86f0f8be.js"></script><script defer="defer" src="index.c725d073.js"></script>
+<style id="pro-intro-hotfix">
+.pro-intro-panel{
+  width:min(720px,96vw)!important;
+  max-height:min(92vh,960px)!important;
+}
+.pro-intro-panel .rule-modal-head{padding-left:28px;padding-right:20px}
+.pro-intro-body{
+  padding:16px 22px 28px 32px!important;
+  overflow:auto!important;
+  flex:1!important;
+  min-height:0!important;
+}
+.pro-intro-list{padding-left:1.35em}
+.pro-intro-cta{
+  margin-bottom:4px;
+  padding:16px 14px 18px;
+  text-align:center!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+}
+.pro-intro-cta-title{display:none!important}
+.pro-intro-qr-tip{
+  display:block!important;
+  order:1;
+  margin:0!important;
+  padding:0 8px;
+  font-size:12px;
+  line-height:1.5;
+  color:#546e7a!important;
+  text-align:center!important;
+  visibility:visible!important;
+  opacity:1!important;
+}
+.pro-intro-qr{
+  display:block!important;
+  order:2;
+  margin:10px auto 0!important;
+  flex-shrink:0;
+}
+.pro-intro-cta-desc{
+  display:block!important;
+  order:3;
+  margin:12px 0 0!important;
+  font-size:12.5px;
+  color:#607d8b!important;
+  text-align:center!important;
+  white-space:nowrap!important;
+  max-width:none!important;
+}
+</style>
+<script>
+(function(){
+  var HIS_HTML='<li><strong>HIS 页面嵌入集成</strong>：支持以 Web 嵌入/弹窗接入 HIS；业务系统点击分组后打开测算页，经 URL 传入授权与病例信息（诊断、手术、费用等），实现院内互联互通；参数需正确 URL 编码</li>';
+  var DESC='添加微信后可索取专业版介绍、报价与采购申请材料，便于向医院领导汇报审批';
+  var TIP='微信扫一扫，添加 OpenDRG 开发团队';
+  var LEAD='社区版（免费版）便于学习与体验；专业版面向医院正式业务，在能力、数据与服务上全面增强';
+  var H2='相对社区版（免费版）的功能增强';
+  var QR='opendrg-team-wechat.jpg?v=20260927b';
+  function stripEndStop(s){
+    return String(s||'').replace(/。/g,'；').replace(/；+/g,'；').replace(/；\s*$/,'');
+  }
+  function patch(modal){
+    if(!modal||modal.getAttribute('data-pro-hotfixed')==='1') return;
+    var lead=modal.querySelector('.pro-intro-lead');
+    if(lead) lead.textContent=LEAD;
+    var h2=modal.querySelector('.pro-intro-h');
+    if(h2) h2.textContent=H2;
+    var lists=modal.querySelectorAll('.pro-intro-list');
+    lists.forEach(function(ul){
+      ul.querySelectorAll('li').forEach(function(li){
+        var strong=li.querySelector('strong');
+        var label=strong?strong.outerHTML:'';
+        var rest=li.textContent||'';
+        if(strong){
+          var t=strong.textContent||'';
+          rest=rest.replace(t,'').replace(/^[\s：:]*/,'');
+        }
+        rest=stripEndStop(rest);
+        li.innerHTML=(label?(strong.outerHTML+'：'):'')+rest;
+      });
+    });
+    if(lists[0]&&!/HIS\s*页面嵌入/.test(lists[0].textContent||'')){
+      var anchor=null;
+      lists[0].querySelectorAll('li').forEach(function(li){
+        if(/授权部署/.test(li.textContent||'')) anchor=li;
+      });
+      var tmp=document.createElement('ul');
+      tmp.innerHTML=HIS_HTML;
+      var node=tmp.firstElementChild;
+      if(anchor) lists[0].insertBefore(node, anchor);
+      else lists[0].appendChild(node);
+    }
+    var cta=modal.querySelector('.pro-intro-cta');
+    if(cta){
+      var title=cta.querySelector('.pro-intro-cta-title');
+      if(title) title.remove();
+      var img=cta.querySelector('.pro-intro-qr')||document.createElement('img');
+      img.className='pro-intro-qr';
+      img.alt='OpenDRG开发团队微信二维码';
+      img.width=220;
+      img.height=220;
+      img.src=QR;
+      var tip=document.createElement('p');
+      tip.className='pro-intro-qr-tip';
+      tip.textContent=TIP;
+      var desc=document.createElement('p');
+      desc.className='pro-intro-cta-desc';
+      desc.textContent=DESC;
+      // 上：扫一扫 → 中：二维码 → 下：说明（不换行）
+      cta.innerHTML='';
+      cta.appendChild(tip);
+      cta.appendChild(img);
+      cta.appendChild(desc);
+    }
+    modal.setAttribute('data-pro-hotfixed','1');
+  }
+  function scan(){
+    var m=document.getElementById('pro_intro_modal');
+    if(m) patch(m);
+  }
+  var obs=new MutationObserver(scan);
+  if(document.body) obs.observe(document.body,{childList:true,subtree:true});
+  else document.addEventListener('DOMContentLoaded',function(){
+    obs.observe(document.body,{childList:true,subtree:true});
+    scan();
+  });
+  setInterval(scan,800);
+})();
+</script>
+</head><body></body></html>
